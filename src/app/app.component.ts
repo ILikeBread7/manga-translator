@@ -10,34 +10,71 @@ declare const fabric: any;
 export class AppComponent implements OnInit {
 
   private canvas;
+  private currentImage;
+
+  public MAX_WIDTH = 500;
+  public MAX_HEIGHT = 700;
 
   ngOnInit(): void {
     this.canvas = new fabric.Canvas('canvas', {
       backgroundColor: '#fff',
       selection: false
     });
-    this.canvas.setWidth(300);
-    this.canvas.setHeight(500);
-
-    const rect = new fabric.Rect({
-      left: 100,
-      top: 100,
-      fill: 'red',
-      width: 20,
-      height: 20,
-      angle: 45
-    });
-
-    rect.on('modified', (e) => {
-      console.log(`Left: ${rect.left}, Top: ${rect.top}, ScaleX: ${rect.scaleX}, ScaleY: ${rect.scaleY}, Angle: ${rect.angle}`);
-    });
-
-    this.canvas.add(rect);
+    this.canvas.setWidth(500);
+    this.canvas.setHeight(700);
   }
 
   public toggleCanvasZoom(): void {
-    const zoom = this.canvas.getZoom();
-    this.canvas.setZoom(zoom === 1 ? 2 : 1);
+    const zoom = this.canvas.getZoom() === 1 ? 0.5 : 1;
+    const dim = this.currentImage
+      ? {zoom: zoom, width: this.currentImage.width, height: this.currentImage.height}
+      : {zoom: zoom, width: this.MAX_WIDTH, height: this.MAX_HEIGHT};
+
+    this.setCanvasDimensions(dim);
   }
 
+  public loadFile($event): void {
+    console.log($event.target.files[0]);
+    const reader = new FileReader();
+    reader.onload = (event: any) => {
+      const img = new Image();
+      img.src = event.target.result;
+      img.onload = () => {
+        const fabricImage = new fabric.Image(img, {
+          selectable: false,
+          hoverCursor: 'cursor'
+        });
+        this.canvas.clear();
+        this.currentImage = fabricImage;
+        this.setCanvasDimensions(
+          {
+            zoom: this.getCanvasInitialZoom(img.width, img.height),
+            width: img.width,
+            height: img.height
+          }
+        );
+        this.canvas.add(fabricImage);
+      };
+    };
+    reader.readAsDataURL($event.target.files[0]);
+  }
+
+  private setCanvasDimensions(dim: CanvasDimensions): void {
+    this.canvas.setWidth(dim.width * dim.zoom);
+    this.canvas.setHeight(dim.height * dim.zoom);
+    this.canvas.setZoom(dim.zoom);
+  }
+
+  private getCanvasInitialZoom(imgWidth: number, imgHeight: number) {
+    const widthRatio = this.MAX_WIDTH / imgWidth;
+    const heightRatio = this.MAX_HEIGHT / imgHeight;
+    return Math.min(widthRatio, heightRatio);
+  }
+
+}
+
+interface CanvasDimensions {
+  width: number;
+  height: number;
+  zoom: number;
 }

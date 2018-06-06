@@ -1,2 +1,5 @@
 <button class="btn btn-primary" (click)="toggleCanvasZoom()"> Button! </button>
-<canvas id="canvas"></canvas>
+<input type="file" (change)="loadFile($event)"/>
+<div class="canvas-container" [style.width]="MAX_WIDTH + 'px'" [style.height]="MAX_HEIGHT + 'px'">
+  <canvas id="canvas"></canvas>
+</div>
