@@ -1,3 +1,20 @@
 .canvas-container {
   overflow: auto
 }
+
+.canvas-div {
+  overflow: auto;
+  float: left
+}
+
+
+.vertical-slider {
+  width: 21px;
+  height: 50%;
+  -webkit-appearance: slider-vertical;
+}
+
+.zoom-panel {
+  float: left;
+  margin-left: 15px;
+}

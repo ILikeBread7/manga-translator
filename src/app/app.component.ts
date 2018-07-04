@@ -11,9 +11,12 @@ export class AppComponent implements OnInit {
 
   private canvas;
   private currentImage;
+  private defaultZoom = 1;
 
   public MAX_WIDTH = 500;
   public MAX_HEIGHT = 700;
+
+  public zoom = 1;
 
   ngOnInit(): void {
     this.canvas = new fabric.Canvas('canvas', {
@@ -22,15 +25,6 @@ export class AppComponent implements OnInit {
     });
     this.canvas.setWidth(500);
     this.canvas.setHeight(700);
-  }
-
-  public toggleCanvasZoom(): void {
-    const zoom = this.canvas.getZoom() === 1 ? 0.5 : 1;
-    const dim = this.currentImage
-      ? {zoom: zoom, width: this.currentImage.width, height: this.currentImage.height}
-      : {zoom: zoom, width: this.MAX_WIDTH, height: this.MAX_HEIGHT};
-
-    this.setCanvasDimensions(dim);
   }
 
   public loadFile($event): void {
@@ -46,9 +40,10 @@ export class AppComponent implements OnInit {
         });
         this.canvas.clear();
         this.currentImage = fabricImage;
+        this.defaultZoom = this.zoom = this.getCanvasInitialZoom(img.width, img.height);
         this.setCanvasDimensions(
           {
-            zoom: this.getCanvasInitialZoom(img.width, img.height),
+            zoom: this.zoom,
             width: img.width,
             height: img.height
           }
@@ -57,6 +52,29 @@ export class AppComponent implements OnInit {
       };
     };
     reader.readAsDataURL($event.target.files[0]);
+  }
+
+  public zoomChange($event): void {
+    const newZoom = $event.target.value;
+    if (newZoom > 0 && newZoom <= 2) {
+      this.setCanvasZoom(newZoom);
+    }
+  }
+
+  public isImageLoaded(): boolean {
+    return !!this.currentImage;
+  }
+
+  public changeZoomToDefault(): void {
+    this.setCanvasZoom(this.defaultZoom);
+  }
+
+  private setCanvasZoom(zoom): void {
+    this.zoom = zoom;
+    const dim = this.currentImage
+      ? {zoom: zoom, width: this.currentImage.width, height: this.currentImage.height}
+      : {zoom: zoom, width: this.MAX_WIDTH, height: this.MAX_HEIGHT};
+    this.setCanvasDimensions(dim);
   }
 
   private setCanvasDimensions(dim: CanvasDimensions): void {
@@ -68,7 +86,7 @@ export class AppComponent implements OnInit {
   private getCanvasInitialZoom(imgWidth: number, imgHeight: number) {
     const widthRatio = this.MAX_WIDTH / imgWidth;
     const heightRatio = this.MAX_HEIGHT / imgHeight;
-    return Math.min(widthRatio, heightRatio);
+    return Math.min(widthRatio, heightRatio, 2);
   }
 
 }
