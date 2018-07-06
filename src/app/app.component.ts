@@ -11,9 +11,7 @@ export class AppComponent implements OnInit {
   public MAX_WIDTH = 500;
   public MAX_HEIGHT = 700;
 
-  constructor(
-    private eventsService: EventsService
-  ) { }
+  constructor() { }
 
   ngOnInit(): void {
   }

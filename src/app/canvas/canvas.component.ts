@@ -3,6 +3,7 @@ import { EventsService } from '../events.service';
 import 'fabric';
 import { Subscription } from 'rxjs';
 import * as _ from 'lodash';
+import { TextRect } from './text-rect';
 declare const fabric: any;
 
 @Component({
@@ -26,6 +27,7 @@ export class CanvasComponent implements OnInit, OnDestroy {
 
   private isDrawing = false;
   private drawingStartPointer: any;
+  private currentlyDrawnRect: TextRect;
 
   constructor(
     private eventsService: EventsService
@@ -45,9 +47,21 @@ export class CanvasComponent implements OnInit, OnDestroy {
       }
       const pointer = _.mapValues(this.canvas.getPointer(options.e), Math.floor);
       this.drawingStartPointer = pointer;
-      const rect = new fabric.Rect({left: pointer.x, top: pointer.y, width: 0, height: 0, fill: '#f55', opacity: 0.5, selectable: true});
-      this.canvas.add(rect);
-      this.canvas.setActiveObject(rect);
+      const rect = new TextRect(
+        this.canvas,
+        '',
+        {
+          left: pointer.x,
+          top: pointer.y,
+          width: 0,
+          height: 0,
+          fill: '#eee',
+          opacity: 0.7
+        }
+      );
+      rect.addToCanvas();
+      rect.setActive();
+      this.currentlyDrawnRect = rect;
       this.isDrawing = true;
     });
 
@@ -56,7 +70,7 @@ export class CanvasComponent implements OnInit, OnDestroy {
         return;
       }
       const pointer = _.mapValues(this.canvas.getPointer(options.e), Math.floor);
-      const rect = this.canvas.getActiveObject();
+      const rect = this.currentlyDrawnRect;
       rect.set({
           left: Math.min(pointer.x, this.drawingStartPointer.x),
           width: Math.abs(pointer.x - this.drawingStartPointer.x),
@@ -71,12 +85,12 @@ export class CanvasComponent implements OnInit, OnDestroy {
         return;
       }
       this.isDrawing = false;
-      const rect = this.canvas.getActiveObject();
+      const rect = this.currentlyDrawnRect;
       if (rect.get('width') === 0 || rect.get('height') === 0) {
-        this.canvas.remove(rect);
+        rect.removeFromCanvas();
       } else {
         rect.setCoords();
-        this.canvas.discardActiveObject();
+        rect.enterEditing();
       }
     });
 
@@ -94,7 +108,7 @@ export class CanvasComponent implements OnInit, OnDestroy {
       img => {
         const fabricImage = new fabric.Image(img, {
           selectable: false,
-          hoverCursor: 'cursor'
+          hoverCursor: 'default'
         });
         this.canvas.clear();
         this.currentImage = fabricImage;
