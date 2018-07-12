@@ -24,12 +24,14 @@ export class CanvasComponent implements OnInit, OnDestroy {
 
   private zoomChangedSubscription: Subscription;
   private imageLoadedSubscription: Subscription;
+  private bubbleDeletedSubscription: Subscription;
 
   private isDrawing = false;
   private drawingStartPointer: any;
   private currentlyDrawnRect: TextRect;
   private nextId = 0;
   private textBubbles: TextRect[] = [];
+  private deletedTextBubbles: TextRect[] = [];
 
   constructor(
     private eventsService: EventsService
@@ -92,11 +94,12 @@ export class CanvasComponent implements OnInit, OnDestroy {
         rect.removeFromCanvas();
       } else {
         rect.setId(this.nextId);
-        rect.on('selected', () => console.log(rect.getId()));
+        rect.on('selected', () => this.eventsService.bubbleSelected(rect));
         this.textBubbles[this.nextId] = rect;
         this.nextId++;
         rect.setCoords();
         rect.enterEditing();
+        this.eventsService.bubbleSelected(rect);
       }
     });
 
@@ -121,11 +124,20 @@ export class CanvasComponent implements OnInit, OnDestroy {
         this.canvas.add(fabricImage);
       }
     );
+
+    this.bubbleDeletedSubscription = this.eventsService.bubbleDeleted$.subscribe(
+      id => {
+        this.textBubbles[id].removeFromCanvas();
+        this.deletedTextBubbles.push(this.textBubbles[id]);
+        delete this.textBubbles[id];
+      }
+    );
   }
 
   ngOnDestroy() {
     this.zoomChangedSubscription.unsubscribe();
     this.imageLoadedSubscription.unsubscribe();
+    this.bubbleDeletedSubscription.unsubscribe();
   }
 
   private setCanvasDimensions(dim: CanvasDimensions): void {

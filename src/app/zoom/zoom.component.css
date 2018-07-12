@@ -1,10 +1,5 @@
-.zoom-panel {
-  float: left;
-  margin-left: 15px;
-}
-
 .vertical-slider {
   width: 21px;
-  height: 50%;
+  height: 200px;
   -webkit-appearance: slider-vertical;
 }

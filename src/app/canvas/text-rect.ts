@@ -10,6 +10,8 @@ export class TextRect {
   private bgRect;
   private textbox;
 
+  private fontSizeFrozen = false;
+
   constructor(private canvas: any, text: string, options: any) {
     this.bgRect = new fabric.Rect(options);
     const textboxOptions = {
@@ -72,6 +74,16 @@ export class TextRect {
     return this.frontRect.get(value);
   }
 
+  public getFromTextbox(value: string) {
+    return this.textbox.get(value);
+  }
+
+  public setToTextbox(key: string, value: any) {
+    this.textbox.set(key, value);
+    this.adjustFontSize(this.frontRect.get('width'));
+    this.canvas.renderAll();
+  }
+
   public setCoords() {
     this.textbox.setCoords();
     this.bgRect.setCoords();
@@ -88,6 +100,18 @@ export class TextRect {
     this.textbox.setSelectionStart(textLength);
     this.textbox.setSelectionEnd(textLength);
     this.canvas.setActiveObject(this.textbox);
+  }
+
+  public isFontSizeFrozen(): boolean {
+    return this.fontSizeFrozen;
+  }
+
+  public setFontSizeFrozen(value: boolean) {
+    this.fontSizeFrozen = value;
+    if (value === false) {
+      this.adjustFontSize(this.frontRect.get('width'));
+      this.canvas.renderAll();
+    }
   }
 
   private onScaledOrMovedOrRotated() {
@@ -110,6 +134,9 @@ export class TextRect {
   }
 
   private adjustFontSize(width: number) {
+    if (this.fontSizeFrozen) {
+      return;
+    }
     this.textbox.set('fontSize', width / 4);
     const rectWidth = this.frontRect.get('width');
     const textboxWidth = this.textbox.get('width');

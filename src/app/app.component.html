@@ -1,5 +1,10 @@
 <app-image-select></app-image-select>
 <div>
   <app-canvas [maxCanvasWidth]="MAX_WIDTH" [maxCanvasHeight]="MAX_HEIGHT"></app-canvas>
-  <app-zoom [maxCanvasWidth]="MAX_WIDTH" [maxCanvasHeight]="MAX_HEIGHT"></app-zoom>
+  <div [hidden]="!showRightPanel" class="right-panel">
+    <app-zoom [maxCanvasWidth]="MAX_WIDTH" [maxCanvasHeight]="MAX_HEIGHT"></app-zoom>
+    <div [hidden]="!showBubbleDetails" class="mt-3">
+      <app-bubble-details></app-bubble-details>
+    </div>
+  </div>
 </div>

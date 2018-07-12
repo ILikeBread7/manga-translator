@@ -16,7 +16,6 @@ export class ZoomComponent implements OnInit, OnDestroy {
   public maxCanvasHeight: number;
 
   public zoom = 1;
-  public show = false;
 
   private imageLoadedSubscription: Subscription;
   private defaultZoom = 1;
@@ -28,7 +27,6 @@ export class ZoomComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.imageLoadedSubscription = this.eventsService.imageLoaded$.subscribe(
       img => {
-        this.show = true;
         this.defaultZoom = this.getCanvasInitialZoom(img.width, img.height);
         this.setCanvasZoom(this.defaultZoom);
       }

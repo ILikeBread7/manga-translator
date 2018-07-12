@@ -1,7 +1,5 @@
-<div *ngIf="show" class="zoom-panel" [style.height]="maxCanvasHeight + 'px'">
-  <input type="range" class="vertical-slider" orient="vertical" [value]="zoom" min="0.1" max="2" step="0.1" (input)="zoomChange($event)">
-  <div>
-    <input type="number" [style.width]="'100px'" class="form-control d-inline" [value]="zoom" min="0.1" max="2" step="0.1" (input)="zoomChange($event)"/>
-    <button class="btn btn-default ml-2" (click)="changeZoomToDefault()">Default zoom</button>
-  </div>
+<input type="range" class="vertical-slider" orient="vertical" [value]="zoom" min="0.1" max="2" step="0.1" (input)="zoomChange($event)">
+<div>
+  <input type="number" [style.width]="'100px'" class="form-control d-inline" [value]="zoom" min="0.1" max="2" step="0.1" (input)="zoomChange($event)"/>
+  <button class="btn btn-default ml-2" (click)="changeZoomToDefault()">Default zoom</button>
 </div>

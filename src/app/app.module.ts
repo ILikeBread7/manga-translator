@@ -5,13 +5,15 @@ import { AppComponent } from './app.component';
 import { ZoomComponent } from './zoom/zoom.component';
 import { ImageSelectComponent } from './image-select/image-select.component';
 import { CanvasComponent } from './canvas/canvas.component';
+import { BubbleDetailsComponent } from './bubble-details/bubble-details.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ZoomComponent,
     ImageSelectComponent,
-    CanvasComponent
+    CanvasComponent,
+    BubbleDetailsComponent
   ],
   imports: [
     BrowserModule
