@@ -28,6 +28,8 @@ export class CanvasComponent implements OnInit, OnDestroy {
   private isDrawing = false;
   private drawingStartPointer: any;
   private currentlyDrawnRect: TextRect;
+  private nextId = 0;
+  private textBubbles: TextRect[] = [];
 
   constructor(
     private eventsService: EventsService
@@ -89,6 +91,10 @@ export class CanvasComponent implements OnInit, OnDestroy {
       if (rect.get('width') === 0 || rect.get('height') === 0) {
         rect.removeFromCanvas();
       } else {
+        rect.setId(this.nextId);
+        rect.on('selected', () => console.log(rect.getId()));
+        this.textBubbles[this.nextId] = rect;
+        this.nextId++;
         rect.setCoords();
         rect.enterEditing();
       }

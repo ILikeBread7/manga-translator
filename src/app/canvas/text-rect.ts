@@ -1,7 +1,10 @@
 import 'fabric';
 declare const fabric: any;
+import * as _ from 'lodash';
 
 export class TextRect {
+
+  private id: number;
 
   private frontRect;
   private bgRect;
@@ -9,15 +12,23 @@ export class TextRect {
 
   constructor(private canvas: any, text: string, options: any) {
     this.bgRect = new fabric.Rect(options);
-    const dims = {
+    const textboxOptions = {
       left: options.left,
       top: options.top,
-      width: options.width
+      width: options.width,
+      lineHeight: 1,
+      textAlign: 'center',
+      fontFamily: 'Comic Sans MS, Comic Sans'
     };
-    this.textbox = new fabric.Textbox(text, dims);
-    dims['height'] = options.height;
-    dims['opacity'] = 0;
-    this.frontRect = new fabric.Rect(dims);
+    this.textbox = new fabric.Textbox(text, textboxOptions);
+    const rectOptions = {
+      left: options.left,
+      top: options.top,
+      width: options.width,
+      height: options.height,
+      opacity: 0
+    };
+    this.frontRect = new fabric.Rect(rectOptions);
     const handler = () => this.onScaledOrMovedOrRotated();
     this.frontRect.on('scaling', handler);
     this.frontRect.on('moving', handler);
@@ -25,6 +36,7 @@ export class TextRect {
 
     this.frontRect.on('mousedblclick', () => this.enterEditing());
     this.textbox.on('editing:exited', () => this.canvas.setActiveObject(this.frontRect));
+    this.textbox.on('changed', () => this.adjustFontSize(this.textbox.get('width')));
   }
 
   public addToCanvas() {
@@ -39,6 +51,21 @@ export class TextRect {
     this.frontRect.set(options);
     this.bgRect.set(options);
     this.textbox.set(options);
+    if (_.has(options, 'width')) {
+      this.adjustFontSize(options.width);
+    }
+  }
+
+  public setId(id: number) {
+    this.id = id;
+  }
+
+  public getId(): number {
+    return this.id;
+  }
+
+  public on(event: string, handler: () => void) {
+    this.frontRect.on(event, handler);
   }
 
   public get(value: string) {
@@ -57,6 +84,9 @@ export class TextRect {
 
   public enterEditing() {
     this.textbox.enterEditing();
+    const textLength = this.textbox.get('text').length;
+    this.textbox.setSelectionStart(textLength);
+    this.textbox.setSelectionEnd(textLength);
     this.canvas.setActiveObject(this.textbox);
   }
 
@@ -76,6 +106,17 @@ export class TextRect {
     this.textbox.set(newDims);
     newDims['height'] = this.frontRect.get('height');
     this.bgRect.set(newDims);
+    this.adjustFontSize(this.frontRect.get('width'));
+  }
+
+  private adjustFontSize(width: number) {
+    this.textbox.set('fontSize', width / 4);
+    const rectWidth = this.frontRect.get('width');
+    const textboxWidth = this.textbox.get('width');
+    if (textboxWidth > rectWidth) {
+      this.textbox.set('fontSize', this.textbox.get('fontSize') * rectWidth / (textboxWidth + 1));
+      this.textbox.set('width', rectWidth);
+    }
   }
 
 }
