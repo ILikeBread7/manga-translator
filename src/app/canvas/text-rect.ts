@@ -11,9 +11,22 @@ export class TextRect {
   private textbox;
 
   private fontSizeFrozen = false;
+  private visibleBackground = true;
+
+  private bgRectVisibleOptions = {
+    fill: '#ee4',
+    opacity: 0.7
+  };
+
+  private bgRectNotVisibleOptions = {
+    fill: '#eee',
+    opacity: 0.7
+  };
 
   constructor(private canvas: any, text: string, options: any) {
-    this.bgRect = new fabric.Rect(options);
+    const bgRectOptions = Object.assign({}, options);
+    Object.assign(bgRectOptions, this.bgRectVisibleOptions);
+    this.bgRect = new fabric.Rect(bgRectOptions);
     const textboxOptions = {
       left: options.left,
       top: options.top,
@@ -112,6 +125,20 @@ export class TextRect {
       this.adjustFontSize(this.frontRect.get('width'));
       this.canvas.renderAll();
     }
+  }
+
+  public isVisibleBackground(): boolean {
+    return this.visibleBackground;
+  }
+
+  public setVisibleBackground(value: boolean) {
+    this.visibleBackground = value;
+    if (value) {
+      this.bgRect.set(this.bgRectVisibleOptions);
+    } else {
+      this.bgRect.set(this.bgRectNotVisibleOptions);
+    }
+    this.canvas.renderAll();
   }
 
   private onScaledOrMovedOrRotated() {

@@ -2,6 +2,9 @@
 <div>
   <app-canvas [maxCanvasWidth]="MAX_WIDTH" [maxCanvasHeight]="MAX_HEIGHT"></app-canvas>
   <div [hidden]="!showRightPanel" class="right-panel">
+    <div class="mb-2">
+      <button [disabled]="!bubblesService.isDeletedStackNotEmpty()" class="btn btn-default" (click)="bubblesService.undeleteLastBubble()">Undelete</button>
+    </div>
     <app-zoom [maxCanvasWidth]="MAX_WIDTH" [maxCanvasHeight]="MAX_HEIGHT"></app-zoom>
     <div [hidden]="!showBubbleDetails" class="mt-3">
       <app-bubble-details></app-bubble-details>

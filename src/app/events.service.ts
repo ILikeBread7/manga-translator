@@ -13,8 +13,6 @@ export class EventsService {
   public imageLoaded$ = this.imageLoadedSource.asObservable();
   private bubbleSelectedSource = new Subject<TextRect>();
   public bubbleSelected$ = this.bubbleSelectedSource.asObservable();
-  private bubbleDeletedSource = new Subject<number>();
-  public bubbleDeleted$ = this.bubbleDeletedSource.asObservable();
 
   constructor() { }
 
@@ -28,10 +26,6 @@ export class EventsService {
 
   public bubbleSelected(bubble: TextRect) {
     this.bubbleSelectedSource.next(bubble);
-  }
-
-  public bubbleDeleted(id: number) {
-    this.bubbleDeletedSource.next(id);
   }
 
 }

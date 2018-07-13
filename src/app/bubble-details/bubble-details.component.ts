@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { EventsService } from '../events.service';
 import { Subscription } from 'rxjs';
 import { TextRect } from '../canvas/text-rect';
+import { BubblesService } from '../bubbles.service';
 
 @Component({
   selector: 'app-bubble-details',
@@ -15,7 +16,8 @@ export class BubbleDetailsComponent implements OnInit, OnDestroy {
   private bubbleSelectedSubscription: Subscription;
 
   constructor(
-    private eventsService: EventsService
+    private eventsService: EventsService,
+    private bubblesService: BubblesService
   ) { }
 
   ngOnInit() {
@@ -29,7 +31,7 @@ export class BubbleDetailsComponent implements OnInit, OnDestroy {
   }
 
   public deleteBubble() {
-    this.eventsService.bubbleDeleted(this.bubble.getId());
+    this.bubblesService.deleteBubble(this.bubble.getId());
     this.bubble = undefined;
   }
 

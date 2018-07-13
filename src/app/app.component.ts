@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { EventsService } from './events.service';
 import { Subscription } from 'rxjs';
+import { BubblesService } from './bubbles.service';
 
 @Component({
   selector: 'app-root',
@@ -19,7 +20,8 @@ export class AppComponent implements OnInit, OnDestroy {
   private bubbleSelectedSubscription: Subscription;
 
   constructor(
-    private eventsService: EventsService
+    private eventsService: EventsService,
+    public bubblesService: BubblesService
   ) { }
 
   ngOnInit(): void {

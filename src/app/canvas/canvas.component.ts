@@ -4,6 +4,7 @@ import 'fabric';
 import { Subscription } from 'rxjs';
 import * as _ from 'lodash';
 import { TextRect } from './text-rect';
+import { BubblesService } from '../bubbles.service';
 declare const fabric: any;
 
 @Component({
@@ -29,12 +30,10 @@ export class CanvasComponent implements OnInit, OnDestroy {
   private isDrawing = false;
   private drawingStartPointer: any;
   private currentlyDrawnRect: TextRect;
-  private nextId = 0;
-  private textBubbles: TextRect[] = [];
-  private deletedTextBubbles: TextRect[] = [];
 
   constructor(
-    private eventsService: EventsService
+    private eventsService: EventsService,
+    private bubblesService: BubblesService
   ) { }
 
   ngOnInit() {
@@ -58,9 +57,7 @@ export class CanvasComponent implements OnInit, OnDestroy {
           left: pointer.x,
           top: pointer.y,
           width: 0,
-          height: 0,
-          fill: '#eee',
-          opacity: 0.7
+          height: 0
         }
       );
       rect.addToCanvas();
@@ -93,10 +90,8 @@ export class CanvasComponent implements OnInit, OnDestroy {
       if (rect.get('width') === 0 || rect.get('height') === 0) {
         rect.removeFromCanvas();
       } else {
-        rect.setId(this.nextId);
+        this.bubblesService.addBubble(rect);
         rect.on('selected', () => this.eventsService.bubbleSelected(rect));
-        this.textBubbles[this.nextId] = rect;
-        this.nextId++;
         rect.setCoords();
         rect.enterEditing();
         this.eventsService.bubbleSelected(rect);
@@ -120,18 +115,13 @@ export class CanvasComponent implements OnInit, OnDestroy {
           hoverCursor: 'default'
         });
         this.canvas.clear();
+        this.bubblesService.clearBubbles();
         this.currentImage = fabricImage;
         this.canvas.add(fabricImage);
+        this.eventsService.bubbleSelected(undefined);
       }
     );
 
-    this.bubbleDeletedSubscription = this.eventsService.bubbleDeleted$.subscribe(
-      id => {
-        this.textBubbles[id].removeFromCanvas();
-        this.deletedTextBubbles.push(this.textBubbles[id]);
-        delete this.textBubbles[id];
-      }
-    );
   }
 
   ngOnDestroy() {
