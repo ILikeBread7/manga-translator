@@ -107,6 +107,10 @@ export class TextRect {
     this.canvas.setActiveObject(this.frontRect);
   }
 
+  public isActiveAndNotEditing(): boolean {
+    return this.frontRect === this.canvas.getActiveObject();
+  }
+
   public enterEditing() {
     this.textbox.enterEditing();
     const textLength = this.textbox.get('text').length;

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy, HostListener } from '@angular/core';
 import { EventsService } from '../events.service';
 import 'fabric';
 import { Subscription } from 'rxjs';
@@ -30,6 +30,7 @@ export class CanvasComponent implements OnInit, OnDestroy {
   private isDrawing = false;
   private drawingStartPointer: any;
   private currentlyDrawnRect: TextRect;
+  private selectedBubble: TextRect;
 
   constructor(
     private eventsService: EventsService,
@@ -91,10 +92,10 @@ export class CanvasComponent implements OnInit, OnDestroy {
         rect.removeFromCanvas();
       } else {
         this.bubblesService.addBubble(rect);
-        rect.on('selected', () => this.eventsService.bubbleSelected(rect));
+        rect.on('selected', () => this.selectBubble(rect));
         rect.setCoords();
         rect.enterEditing();
-        this.eventsService.bubbleSelected(rect);
+        this.selectBubble(rect);
       }
     });
 
@@ -118,7 +119,7 @@ export class CanvasComponent implements OnInit, OnDestroy {
         this.bubblesService.clearBubbles();
         this.currentImage = fabricImage;
         this.canvas.add(fabricImage);
-        this.eventsService.bubbleSelected(undefined);
+        this.selectBubble(undefined);
       }
     );
 
@@ -130,10 +131,30 @@ export class CanvasComponent implements OnInit, OnDestroy {
     this.bubbleDeletedSubscription.unsubscribe();
   }
 
+  @HostListener('body:keyup', ['$event'])
+  public handleKeyEvent(event: KeyboardEvent) {
+    if ((event.target as HTMLElement).nodeName !== 'BODY') {
+      return;
+    }
+    const keyCode = event.which || event.keyCode;
+    if (
+        keyCode === 46 // 46 = Delete
+        && typeof this.selectedBubble !== 'undefined'
+        && this.selectedBubble.isActiveAndNotEditing()) {
+      this.bubblesService.deleteBubble(this.selectedBubble.getId());
+      this.selectBubble(undefined);
+    }
+  }
+
   private setCanvasDimensions(dim: CanvasDimensions): void {
     this.canvas.setWidth(dim.width * dim.zoom);
     this.canvas.setHeight(dim.height * dim.zoom);
     this.canvas.setZoom(dim.zoom);
+  }
+
+  private selectBubble(bubble: TextRect) {
+    this.selectedBubble = bubble;
+    this.eventsService.bubbleSelected(bubble);
   }
 
 }
