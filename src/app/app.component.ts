@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { EventsService } from './events.service';
 import { Subscription } from 'rxjs';
 import { BubblesService } from './bubbles.service';
+import { ImageExportService } from './image-export.service';
 
 @Component({
   selector: 'app-root',
@@ -16,17 +17,23 @@ export class AppComponent implements OnInit, OnDestroy {
   public showRightPanel = false;
   public showBubbleDetails = false;
 
+  private currentImage;
+
   private imageLoadedSubscription: Subscription;
   private bubbleSelectedSubscription: Subscription;
 
   constructor(
     private eventsService: EventsService,
+    private imageExportService: ImageExportService,
     public bubblesService: BubblesService
   ) { }
 
   ngOnInit(): void {
     this.imageLoadedSubscription = this.eventsService.imageLoaded$.subscribe(
-      img => this.showRightPanel = true
+      img => {
+        this.showRightPanel = true;
+        this.currentImage = img;
+      }
     );
     this.bubbleSelectedSubscription = this.eventsService.bubbleSelected$.subscribe(
       bubble => this.showBubbleDetails = true
@@ -37,4 +44,9 @@ export class AppComponent implements OnInit, OnDestroy {
     this.imageLoadedSubscription.unsubscribe();
     this.bubbleSelectedSubscription.unsubscribe();
   }
+
+  public exportImage() {
+    this.imageExportService.exportImage(this.currentImage, this.bubblesService.getExportBubbles());
+  }
+
 }

@@ -12,6 +12,7 @@ export class TextRect {
 
   private fontSizeFrozen = false;
   private visibleBackground = true;
+  private invertedColors = false;
 
   private bgRectVisibleOptions = {
     fill: '#ee4',
@@ -20,6 +21,11 @@ export class TextRect {
 
   private bgRectNotVisibleOptions = {
     fill: '#eee',
+    opacity: 0.7
+  };
+
+  private bgRectInvertedOptions = {
+    fill: '#e44',
     opacity: 0.7
   };
 
@@ -138,10 +144,23 @@ export class TextRect {
   public setVisibleBackground(value: boolean) {
     this.visibleBackground = value;
     if (value) {
-      this.bgRect.set(this.bgRectVisibleOptions);
+      this.bgRect.set(this.invertedColors ? this.bgRectInvertedOptions : this.bgRectVisibleOptions);
     } else {
       this.bgRect.set(this.bgRectNotVisibleOptions);
     }
+    this.canvas.renderAll();
+  }
+
+  public isInvertedColors(): boolean {
+    return this.invertedColors;
+  }
+
+  public setInvertedColors(value: boolean) {
+    this.invertedColors = value;
+    if (value && this.visibleBackground) {
+      this.bgRect.set(this.bgRectInvertedOptions);
+    }
+    this.textbox.set('fill', value ? '#fff' : '#000');
     this.canvas.renderAll();
   }
 

@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { TextRect } from './canvas/text-rect';
+import { ExportTextRect } from './export-text-rect';
+import * as _ from 'lodash';
 
 @Injectable({
   providedIn: 'root'
@@ -43,6 +45,10 @@ export class BubblesService {
   public clearBubbles() {
     this.textBubbles = [];
     this.deletedTextBubbles = [];
+  }
+
+  public getExportBubbles(): ExportTextRect[] {
+    return _.map(this.textBubbles, (bubble) => new ExportTextRect(bubble));
   }
 
 }
