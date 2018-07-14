@@ -92,7 +92,10 @@ export class CanvasComponent implements OnInit, OnDestroy {
         rect.removeFromCanvas();
       } else {
         this.bubblesService.addBubble(rect);
-        rect.on('selected', () => this.selectBubble(rect));
+        const onSelectedScaledOrMoved = () => this.selectBubble(rect);
+        rect.on('selected', onSelectedScaledOrMoved);
+        rect.on('scaled', onSelectedScaledOrMoved);
+        rect.on('moved', onSelectedScaledOrMoved);
         rect.setCoords();
         rect.enterEditing();
         this.selectBubble(rect);

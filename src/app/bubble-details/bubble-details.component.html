@@ -1,4 +1,4 @@
-<div *ngIf="bubble">
+<div *ngIf="bubble" class="float-left">
   <label>Text</label>
   <textarea class="text" rows="5"
     [value]="bubble.getFromTextbox('text')"
@@ -26,4 +26,7 @@
     </label>
   </div>
   <button class="btn btn-danger" (click)="deleteBubble()">Delete</button>
+</div>
+<div class="float-left ml-2">
+  <canvas id="selectionViewCanvas"></canvas>
 </div>

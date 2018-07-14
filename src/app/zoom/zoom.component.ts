@@ -48,6 +48,10 @@ export class ZoomComponent implements OnInit, OnDestroy {
     this.setCanvasZoom(this.defaultZoom);
   }
 
+  public changeToRealSize(): void {
+    this.setCanvasZoom(1);
+  }
+
   private setCanvasZoom(zoom): void {
     this.zoom = zoom;
     this.eventsService.zoomChanged(zoom);
