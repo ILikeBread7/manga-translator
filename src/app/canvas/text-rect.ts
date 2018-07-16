@@ -39,7 +39,7 @@ export class TextRect {
       width: options.width,
       lineHeight: 1,
       textAlign: 'center',
-      fontFamily: 'Comic Sans MS, Comic Sans'
+      fontFamily: 'Wild Words'
     };
     this.textbox = new fabric.Textbox(text, textboxOptions);
     const rectOptions = {

@@ -47,7 +47,7 @@ export class ImageExportService {
             fill: bubble.isInvertedColors() ? '#fff' : '#000',
             lineHeight: 1,
             textAlign: 'center',
-            fontFamily: 'Comic Sans MS, Comic Sans'
+            fontFamily: bubble.getFontFamily()
           })
         );
       }

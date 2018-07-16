@@ -32,6 +32,21 @@
       (input)="bubble.setToTextbox('fontSize', $event.target.value)"/>
     </label>
   </div>
+  <div class="form-group">
+    <label>Font:</label>
+    <div class="input-group">
+      <input class="form-control"
+        [value]="bubble.getFromTextbox('fontFamily')"
+        (input)="bubble.setToTextbox('fontFamily', $event.target.value)"/>
+      <select class="form-control input-group-append"
+      (input)="bubble.setToTextbox('fontFamily', $event.target.value)">
+        <option>Wild Words</option>
+        <option>Manga Temple</option>
+        <option>Felt</option>
+        <option>Augie</option>
+      </select>
+    </div>
+  </div>
   <button class="btn btn-danger" (click)="deleteBubble()">Delete</button>
 </div>
 <div class="float-left ml-2">

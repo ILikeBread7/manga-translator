@@ -7,6 +7,7 @@ export class ExportTextRect {
   private width: number;
   private height: number;
   private fontSize: number;
+  private fontFamily: number;
   private angle: number;
   private visibleBackground: boolean;
   private invertedColors: boolean;
@@ -18,6 +19,7 @@ export class ExportTextRect {
     this.width = rect.get('width');
     this.height = rect.get('height');
     this.fontSize = rect.getFromTextbox('fontSize');
+    this.fontFamily = rect.getFromTextbox('fontFamily');
     this.angle = rect.get('angle');
     this.visibleBackground = rect.isVisibleBackground();
     this.invertedColors = rect.isInvertedColors();
@@ -42,6 +44,10 @@ export class ExportTextRect {
 
   public getFontSize() {
       return this.fontSize;
+  }
+
+  public getFontFamily() {
+      return this.fontFamily;
   }
 
   public getAngle() {
