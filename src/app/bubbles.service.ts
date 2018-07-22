@@ -48,7 +48,7 @@ export class BubblesService {
   }
 
   public getExportBubbles(): ExportTextRect[] {
-    return _.map(this.textBubbles, (bubble) => new ExportTextRect(bubble));
+    return _.map(_.filter(this.textBubbles, (bubble) => !!bubble), (bubble: TextRect) => new ExportTextRect(bubble));
   }
 
 }

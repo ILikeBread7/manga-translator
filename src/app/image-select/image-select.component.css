@@ -1,0 +1,15 @@
+.files-div {
+  overflow: auto;
+}
+
+.file-item {
+  cursor: pointer;
+}
+.current-file-item {
+  cursor: default;
+  color: #2a2;
+}
+
+.file-item:hover {
+  color: #aa1;
+}

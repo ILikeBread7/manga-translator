@@ -11,6 +11,8 @@ export class EventsService {
   public zoomChanged$ = this.zoomChangedSource.asObservable();
   private imageLoadedSource = new Subject<HTMLImageElement>();
   public imageLoaded$ = this.imageLoadedSource.asObservable();
+  private projectStartedSource = new Subject<any>();
+  public projectStarted$ = this.projectStartedSource.asObservable();
   private bubbleSelectedSource = new Subject<TextRect>();
   public bubbleSelected$ = this.bubbleSelectedSource.asObservable();
 
@@ -22,6 +24,10 @@ export class EventsService {
 
   public imageLoaded(img: HTMLImageElement) {
     this.imageLoadedSource.next(img);
+  }
+
+  public projectStarted(event?: any) {
+    this.projectStartedSource.next(event);
   }
 
   public bubbleSelected(bubble: TextRect) {

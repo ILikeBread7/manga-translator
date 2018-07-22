@@ -20,6 +20,7 @@ export class AppComponent implements OnInit, OnDestroy {
   private currentImage;
 
   private imageLoadedSubscription: Subscription;
+  private projectStartedSubscription: Subscription;
   private bubbleSelectedSubscription: Subscription;
 
   constructor(
@@ -35,6 +36,12 @@ export class AppComponent implements OnInit, OnDestroy {
         this.currentImage = img;
       }
     );
+    this.projectStartedSubscription = this.eventsService.projectStarted$.subscribe(
+      () => {
+        this.showRightPanel = false;
+        this.currentImage = undefined;
+      }
+    );
     this.bubbleSelectedSubscription = this.eventsService.bubbleSelected$.subscribe(
       bubble => this.showBubbleDetails = true
     );
@@ -42,6 +49,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.imageLoadedSubscription.unsubscribe();
+    this.projectStartedSubscription.unsubscribe();
     this.bubbleSelectedSubscription.unsubscribe();
   }
 

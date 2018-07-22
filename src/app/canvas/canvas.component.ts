@@ -25,6 +25,7 @@ export class CanvasComponent implements OnInit, OnDestroy {
 
   private zoomChangedSubscription: Subscription;
   private imageLoadedSubscription: Subscription;
+  private projectStartedSubscription: Subscription;
   private bubbleDeletedSubscription: Subscription;
 
   private isDrawing = false;
@@ -126,11 +127,22 @@ export class CanvasComponent implements OnInit, OnDestroy {
       }
     );
 
+    this.projectStartedSubscription = this.eventsService.projectStarted$.subscribe(
+      () => {
+        this.canvas.clear();
+        this.canvas.setBackgroundColor('#fff');
+        this.bubblesService.clearBubbles();
+        this.currentImage = undefined;
+        this.selectBubble(undefined);
+      }
+    );
+
   }
 
   ngOnDestroy() {
     this.zoomChangedSubscription.unsubscribe();
     this.imageLoadedSubscription.unsubscribe();
+    this.projectStartedSubscription.unsubscribe();
     this.bubbleDeletedSubscription.unsubscribe();
   }
 

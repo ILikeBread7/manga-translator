@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { EventsService } from '../events.service';
 
 @Component({
@@ -8,6 +8,12 @@ import { EventsService } from '../events.service';
 })
 export class ImageSelectComponent implements OnInit {
 
+  public files;
+  public currentFile;
+
+  @Input()
+  public maxCanvasHeight: number;
+
   constructor(
     private eventsService: EventsService
   ) { }
@@ -15,11 +21,18 @@ export class ImageSelectComponent implements OnInit {
   ngOnInit() {
   }
 
-  public loadFile($event): void {
-    if (!$event.target.files[0]) {
+  public loadDir($event): void {
+    if ($event.target.files.length === 0) {
       return;
     }
-    console.log($event.target.files[0]);
+    this.files = $event.target.files;
+    this.eventsService.projectStarted();
+  }
+
+  public loadFile(file: any) {
+    if (file === this.currentFile) {
+      return;
+    }
     const reader = new FileReader();
     reader.onload = (event: any) => {
       const img = new Image();
@@ -28,7 +41,8 @@ export class ImageSelectComponent implements OnInit {
         this.eventsService.imageLoaded(img);
       };
     };
-    reader.readAsDataURL($event.target.files[0]);
+    reader.readAsDataURL(file);
+    this.currentFile = file;
   }
 
 }

@@ -4,8 +4,12 @@
 <span style="font-family: 'Felt'"></span>
 <span style="font-family: 'Augie'"></span>
 
-<app-image-select></app-image-select>
-<button (click)="exportImage()">Export!</button>
+<div class="float-left">
+  <div>
+    <button (click)="exportImage()">Export!</button>
+  </div>
+  <app-image-select [maxCanvasHeight]="MAX_HEIGHT"></app-image-select>
+</div>
 <div>
   <app-canvas [maxCanvasWidth]="MAX_WIDTH" [maxCanvasHeight]="MAX_HEIGHT"></app-canvas>
   <div [hidden]="!showRightPanel" class="right-panel">
