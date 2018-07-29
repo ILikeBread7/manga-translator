@@ -8,6 +8,7 @@ import * as _ from 'lodash';
 })
 export class BubblesService {
 
+  private projectBubbles: { [name: string]: TextRect[] } = {};
   private textBubbles: TextRect[] = [];
   private deletedTextBubbles: TextRect[] = [];
 
@@ -43,12 +44,30 @@ export class BubblesService {
   }
 
   public clearBubbles() {
+    this.projectBubbles = {};
     this.textBubbles = [];
     this.deletedTextBubbles = [];
   }
 
+  public changeImage(name: string) {
+    this.textBubbles = this.projectBubbles[name];
+    if (typeof this.textBubbles === 'undefined') {
+      this.textBubbles = this.projectBubbles[name] = [];
+    }
+    this.deletedTextBubbles = [];
+    console.log(this.textBubbles);
+  }
+
+  public getCurrentBubbles(): TextRect[] {
+    return this.filteredBubbles();
+  }
+
   public getExportBubbles(): ExportTextRect[] {
-    return _.map(_.filter(this.textBubbles, (bubble) => !!bubble), (bubble: TextRect) => new ExportTextRect(bubble));
+    return _.map(this.filteredBubbles(), (bubble: TextRect) => new ExportTextRect(bubble));
+  }
+
+  private filteredBubbles(): TextRect[] {
+    return _.filter(this.textBubbles, (bubble) => !!bubble);
   }
 
 }

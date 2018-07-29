@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { EventsService } from '../events.service';
+import { BubblesService } from '../bubbles.service';
 
 @Component({
   selector: 'app-image-select',
@@ -15,7 +16,8 @@ export class ImageSelectComponent implements OnInit {
   public maxCanvasHeight: number;
 
   constructor(
-    private eventsService: EventsService
+    private eventsService: EventsService,
+    private bubblesService: BubblesService
   ) { }
 
   ngOnInit() {
@@ -33,11 +35,13 @@ export class ImageSelectComponent implements OnInit {
     if (file === this.currentFile) {
       return;
     }
+    console.log(file);
     const reader = new FileReader();
     reader.onload = (event: any) => {
       const img = new Image();
       img.src = event.target.result;
       img.onload = () => {
+        this.bubblesService.changeImage(file.name);
         this.eventsService.imageLoaded(img);
       };
     };

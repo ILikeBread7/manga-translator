@@ -120,10 +120,10 @@ export class CanvasComponent implements OnInit, OnDestroy {
           hoverCursor: 'default'
         });
         this.canvas.clear();
-        this.bubblesService.clearBubbles();
         this.currentImage = fabricImage;
         this.canvas.add(fabricImage);
         this.selectBubble(undefined);
+        _.forEach(this.bubblesService.getCurrentBubbles(), (bubble) => bubble.addToCanvas());
       }
     );
 
