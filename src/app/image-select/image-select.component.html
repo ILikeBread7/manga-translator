@@ -1,5 +1,5 @@
 <input type="file" webkitdirectory directory multiple (change)="loadDir($event)"/>
-<div *ngIf="files" class="files-div" [style.height]="maxCanvasHeight + 'px'">
+<div *ngIf="files" class="files-div" [style.height]="height + 'px'">
   <ul>
     <ng-container *ngFor="let f of files">
       <li *ngIf="f.type.startsWith('image/')" [ngClass]="f === currentFile ? 'current-file-item' : 'file-item'" (click)="loadFile(f)">

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -9,6 +9,8 @@ export class StorageService {
 
   private storage = window.localStorage;
   private lastSaved: Date;
+  private hasUnsavedData = false;
+  private hasError = false;
   private debouncedSave = new Subject<KeyAndFunction>();
 
   constructor() {
@@ -17,17 +19,25 @@ export class StorageService {
       return;
     }
     this.debouncedSave.pipe(
-      debounceTime(1000),
+      debounceTime(3000),
       distinctUntilChanged()
     ).subscribe((data: KeyAndFunction) => this.setObject(data.key, data.getValue()));
   }
 
   public setObject(key: string, value: any) {
-    this.storage.setItem(key, JSON.stringify(value));
-    this.lastSaved = new Date();
+    try {
+      this.storage.setItem(key, JSON.stringify(value));
+      this.lastSaved = new Date();
+      this.hasUnsavedData = false;
+      this.hasError = false;
+    } catch (e) {
+      console.error(e);
+      this.hasError = true;
+    }
   }
 
   public setObjectWithDelay(key: string, getValue: () => any) {
+    this.hasUnsavedData = true;
     this.debouncedSave.next({key: key, getValue: getValue});
   }
 
@@ -49,6 +59,14 @@ export class StorageService {
 
   public getLastSaved(): Date {
     return this.lastSaved;
+  }
+
+  public getHasUnsavedData(): boolean {
+    return this.hasUnsavedData;
+  }
+
+  public getHasError(): boolean {
+    return this.hasError;
   }
 
 }

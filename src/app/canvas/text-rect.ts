@@ -39,7 +39,8 @@ export class TextRect {
       width: options.width,
       lineHeight: 1,
       textAlign: 'center',
-      fontFamily: 'Wild Words'
+      fontFamily: _.has(options, 'fontFamily') ? options.fontFamily : 'Wild Words',
+      angle: _.has(options, 'angle') ? options.angle : 0
     };
     this.textbox = new fabric.Textbox(text, textboxOptions);
     const rectOptions = {
@@ -47,9 +48,25 @@ export class TextRect {
       top: options.top,
       width: options.width,
       height: options.height,
+      angle: _.has(options, 'angle') ? options.angle : 0,
       opacity: 0
     };
+
     this.frontRect = new fabric.Rect(rectOptions);
+    if (_.has(options, 'visibleBackground')) {
+      this.setVisibleBackground(options.visibleBackground);
+    }
+    if (_.has(options, 'invertedColors')) {
+      this.setInvertedColors(options.invertedColors);
+    }
+    if (_.has(options, 'fontSize')) {
+      this.adjustFontSize(options.width);
+      if (this.textbox.get('fontSize') !== options.fontSize) {
+        this.setFontSizeFrozen(true);
+        this.textbox.set('fontSize', options.fontSize);
+      }
+    }
+
     const handler = () => this.onScaledOrMovedOrRotated();
     this.frontRect.on('scaling', handler);
     this.frontRect.on('moving', handler);

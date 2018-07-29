@@ -3,6 +3,7 @@ import { EventsService } from './events.service';
 import { Subscription } from 'rxjs';
 import { BubblesService } from './bubbles.service';
 import { ImageExportService } from './image-export.service';
+import { StorageService } from './storage.service';
 
 @Component({
   selector: 'app-root',
@@ -26,7 +27,8 @@ export class AppComponent implements OnInit, OnDestroy {
   constructor(
     private eventsService: EventsService,
     private imageExportService: ImageExportService,
-    public bubblesService: BubblesService
+    public bubblesService: BubblesService,
+    public storageService: StorageService
   ) { }
 
   ngOnInit(): void {

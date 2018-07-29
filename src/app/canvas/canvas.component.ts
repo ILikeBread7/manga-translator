@@ -33,6 +33,8 @@ export class CanvasComponent implements OnInit, OnDestroy {
   private currentlyDrawnRect: TextRect;
   private selectedBubble: TextRect;
 
+  private saveBubbles = () => this.bubblesService.saveBubbles();
+
   constructor(
     private eventsService: EventsService,
     private bubblesService: BubblesService
@@ -93,17 +95,7 @@ export class CanvasComponent implements OnInit, OnDestroy {
         rect.removeFromCanvas();
       } else {
         this.bubblesService.addBubble(rect);
-        const setBubbleActive = () => this.selectBubble(rect);
-        const saveBubbles = () => this.bubblesService.saveBubbles();
-        rect.on('selected', setBubbleActive);
-        rect.on('scaled', setBubbleActive);
-        rect.on('moved', setBubbleActive);
-        rect.on('rotated', setBubbleActive);
-        rect.on('scaled', saveBubbles);
-        rect.on('moved', saveBubbles);
-        rect.on('rotated', saveBubbles);
-        rect.textboxOn('changed', saveBubbles);
-
+        this.addCallbacks(rect);
         rect.setCoords();
         rect.enterEditing();
         this.selectBubble(rect);
@@ -138,7 +130,9 @@ export class CanvasComponent implements OnInit, OnDestroy {
       (projectName: string) => {
         this.canvas.clear();
         this.canvas.setBackgroundColor('#fff');
-        this.bubblesService.startNewProject(projectName);
+        this.bubblesService.startNewProject(projectName, this.canvas, (bubble: TextRect) =>
+          this.addCallbacks(bubble)
+        );
         this.currentImage = undefined;
         this.selectBubble(undefined);
       }
@@ -177,6 +171,18 @@ export class CanvasComponent implements OnInit, OnDestroy {
   private selectBubble(bubble: TextRect) {
     this.selectedBubble = bubble;
     this.eventsService.bubbleSelected(bubble);
+  }
+
+  private addCallbacks(rect: TextRect) {
+    const setBubbleActive = () => this.selectBubble(rect);
+    rect.on('selected', setBubbleActive);
+    rect.on('scaled', setBubbleActive);
+    rect.on('moved', setBubbleActive);
+    rect.on('rotated', setBubbleActive);
+    rect.on('scaled', this.saveBubbles);
+    rect.on('moved', this.saveBubbles);
+    rect.on('rotated', this.saveBubbles);
+    rect.textboxOn('changed', this.saveBubbles);
   }
 
 }

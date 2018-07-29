@@ -13,7 +13,7 @@ export class ImageSelectComponent implements OnInit {
   public currentFile: File;
 
   @Input()
-  public maxCanvasHeight: number;
+  public height: number;
 
   constructor(
     private eventsService: EventsService,

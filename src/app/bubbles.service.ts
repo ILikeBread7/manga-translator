@@ -10,7 +10,7 @@ import { StorageService } from './storage.service';
 export class BubblesService {
 
   private projectName = '';
-  private projectBubbles: { [name: string]: TextRect[] } = {};
+  private projectBubbles: ImageToBubblesMap = {};
   private textBubbles: TextRect[] = [];
   private deletedTextBubbles: TextRect[] = [];
 
@@ -50,11 +50,26 @@ export class BubblesService {
     }
   }
 
-  public startNewProject(projectName: string) {
+  public startNewProject(projectName: string, canvas: any, addCallbacks: (bubble: TextRect) => void) {
     this.projectName = projectName;
     this.projectBubbles = {};
     this.textBubbles = [];
     this.deletedTextBubbles = [];
+    this.loadBubblesFromStorage(projectName, canvas, addCallbacks);
+  }
+
+  private loadBubblesFromStorage(projectName: string, canvas: any, addCallbacks: (bubble: TextRect) => void) {
+    const savedBubbles = this.storageService.getObject(projectName);
+    if (!savedBubbles) {
+      return;
+    }
+    _.forOwn(savedBubbles, (bubbles: any, name: string) => {
+      this.projectBubbles[name] = _.map(bubbles, (bubble) => {
+        const rect = this.createTextRect(canvas, bubble);
+        addCallbacks(rect);
+        return rect;
+      });
+    });
   }
 
   public changeImage(name: string) {
@@ -95,4 +110,26 @@ export class BubblesService {
     );
   }
 
+  private createTextRect(canvas, savedObject): TextRect {
+    return new TextRect(
+      canvas,
+      savedObject.text,
+      {
+        left: savedObject.left,
+        top: savedObject.top,
+        width: savedObject.width,
+        height: savedObject.height,
+        angle: savedObject.angle,
+        fontSize: savedObject.fontSize,
+        fontFamily: savedObject.fontFamily,
+        visibleBackground: savedObject.visibleBackground,
+        invertedColors: savedObject.invertedColors
+      }
+    );
+  }
+
+}
+
+interface ImageToBubblesMap {
+  [name: string]: TextRect[];
 }
