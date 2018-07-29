@@ -58,15 +58,21 @@ export class BubblesService {
     this.loadBubblesFromStorage(projectName, canvas, addCallbacks);
   }
 
+  public hasBubblesForImage(name: string): boolean {
+    return this.existsAndNotEmpty(this.projectBubbles[name]);
+  }
+
   private loadBubblesFromStorage(projectName: string, canvas: any, addCallbacks: (bubble: TextRect) => void) {
     const savedBubbles = this.storageService.getObject(projectName);
     if (!savedBubbles) {
       return;
     }
     _.forOwn(savedBubbles, (bubbles: any, name: string) => {
+      let id = 0;
       this.projectBubbles[name] = _.map(bubbles, (bubble) => {
         const rect = this.createTextRect(canvas, bubble);
         addCallbacks(rect);
+        rect.setId(id++);
         return rect;
       });
     });
@@ -105,8 +111,13 @@ export class BubblesService {
   }
 
   private getProjectBubblesForSaving() {
-    return _.mapValues(this.projectBubbles, (bubbles: TextRect[]) =>
-      _.map(this.filterBubbles(bubbles), (bubble: TextRect) => new ExportTextRect(bubble))
+    return _.pickBy(
+            _.mapValues(this.projectBubbles
+              , (bubbles: TextRect[]) =>
+                _.map(this.filterBubbles(bubbles)
+                  , (bubble: TextRect) => new ExportTextRect(bubble)
+                )
+            ) , (bubblesForFile) => this.existsAndNotEmpty(bubblesForFile)
     );
   }
 
@@ -126,6 +137,10 @@ export class BubblesService {
         invertedColors: savedObject.invertedColors
       }
     );
+  }
+
+  private existsAndNotEmpty(arr: any[]) {
+    return arr && arr.length > 0;
   }
 
 }

@@ -8,6 +8,10 @@
   <div>
     <button (click)="exportImage()">Export!</button>
   </div>
+  <div class="btn-group">
+    <button (click)="currentTab = 'CANVAS'" class="btn btn-secondary">Canvas</button>
+    <button (click)="currentTab = 'PROJECTS'" class="btn btn-secondary">Projects</button>
+  </div>
   <div>
     <span class="text-warning" *ngIf="storageService.getHasUnsavedData()">
       Unsaved
@@ -21,7 +25,7 @@
   </div>
   <app-image-select [height]="MAX_HEIGHT - 100"></app-image-select>
 </div>
-<div>
+<div [hidden]="currentTab != 'CANVAS'">
   <app-canvas [maxCanvasWidth]="MAX_WIDTH" [maxCanvasHeight]="MAX_HEIGHT"></app-canvas>
   <div [hidden]="!showRightPanel" class="right-panel">
     <div class="mb-2">
@@ -32,4 +36,7 @@
       <app-bubble-details></app-bubble-details>
     </div>
   </div>
+</div>
+<div class="float-left" [hidden]="currentTab != 'PROJECTS'">
+  <app-projects></app-projects>
 </div>

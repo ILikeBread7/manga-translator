@@ -17,7 +17,7 @@ export class ImageSelectComponent implements OnInit {
 
   constructor(
     private eventsService: EventsService,
-    private bubblesService: BubblesService
+    public bubblesService: BubblesService
   ) { }
 
   ngOnInit() {

@@ -6,6 +6,7 @@ import { ZoomComponent } from './zoom/zoom.component';
 import { ImageSelectComponent } from './image-select/image-select.component';
 import { CanvasComponent } from './canvas/canvas.component';
 import { BubbleDetailsComponent } from './bubble-details/bubble-details.component';
+import { ProjectsComponent } from './projects/projects.component';
 
 @NgModule({
   declarations: [
@@ -13,7 +14,8 @@ import { BubbleDetailsComponent } from './bubble-details/bubble-details.componen
     ZoomComponent,
     ImageSelectComponent,
     CanvasComponent,
-    BubbleDetailsComponent
+    BubbleDetailsComponent,
+    ProjectsComponent
   ],
   imports: [
     BrowserModule

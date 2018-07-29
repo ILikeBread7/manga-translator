@@ -17,6 +17,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   public showRightPanel = false;
   public showBubbleDetails = false;
+  public currentTab = 'CANVAS';
 
   private currentImage;
 
