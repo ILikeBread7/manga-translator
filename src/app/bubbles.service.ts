@@ -2,28 +2,34 @@ import { Injectable } from '@angular/core';
 import { TextRect } from './canvas/text-rect';
 import { ExportTextRect } from './export-text-rect';
 import * as _ from 'lodash';
+import { StorageService } from './storage.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BubblesService {
 
+  private projectName = '';
   private projectBubbles: { [name: string]: TextRect[] } = {};
   private textBubbles: TextRect[] = [];
   private deletedTextBubbles: TextRect[] = [];
 
-  constructor() { }
+  constructor(
+    private storageService: StorageService
+  ) { }
 
   public addBubble(bubble: TextRect) {
     const id = this.textBubbles.length;
     bubble.setId(id);
     this.textBubbles[id] = bubble;
+    this.saveBubbles();
   }
 
   public deleteBubble(id: number) {
     this.deletedTextBubbles.push(this.textBubbles[id]);
     this.textBubbles[id].removeFromCanvas();
     delete this.textBubbles[id];
+    this.saveBubbles();
   }
 
   public getBubble(id: number): TextRect {
@@ -40,10 +46,12 @@ export class BubblesService {
       this.textBubbles[bubble.getId()] = bubble;
       bubble.addToCanvas();
       bubble.setActive();
+      this.saveBubbles();
     }
   }
 
-  public clearBubbles() {
+  public startNewProject(projectName: string) {
+    this.projectName = projectName;
     this.projectBubbles = {};
     this.textBubbles = [];
     this.deletedTextBubbles = [];
@@ -55,7 +63,6 @@ export class BubblesService {
       this.textBubbles = this.projectBubbles[name] = [];
     }
     this.deletedTextBubbles = [];
-    console.log(this.textBubbles);
   }
 
   public getCurrentBubbles(): TextRect[] {
@@ -63,11 +70,29 @@ export class BubblesService {
   }
 
   public getExportBubbles(): ExportTextRect[] {
-    return _.map(this.filteredBubbles(), (bubble: TextRect) => new ExportTextRect(bubble));
+    return this.mapToExportBubbles(this.textBubbles);
+  }
+
+  public saveBubbles() {
+    this.storageService.setObjectWithDelay(this.projectName, () => this.getProjectBubblesForSaving());
+  }
+
+  private mapToExportBubbles(bubbles: TextRect[]): ExportTextRect[] {
+    return _.map(this.filterBubbles(bubbles), (bubble: TextRect) => new ExportTextRect(bubble));
   }
 
   private filteredBubbles(): TextRect[] {
-    return _.filter(this.textBubbles, (bubble) => !!bubble);
+    return this.filterBubbles(this.textBubbles);
+  }
+
+  private filterBubbles(bubbles: TextRect[]): TextRect[] {
+    return _.filter(bubbles, (bubble) => !!bubble);
+  }
+
+  private getProjectBubblesForSaving() {
+    return _.mapValues(this.projectBubbles, (bubbles: TextRect[]) =>
+      _.map(this.filterBubbles(bubbles), (bubble: TextRect) => new ExportTextRect(bubble))
+    );
   }
 
 }

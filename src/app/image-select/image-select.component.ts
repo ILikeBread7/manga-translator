@@ -9,8 +9,8 @@ import { BubblesService } from '../bubbles.service';
 })
 export class ImageSelectComponent implements OnInit {
 
-  public files;
-  public currentFile;
+  public files: File[];
+  public currentFile: File;
 
   @Input()
   public maxCanvasHeight: number;
@@ -28,14 +28,13 @@ export class ImageSelectComponent implements OnInit {
       return;
     }
     this.files = $event.target.files;
-    this.eventsService.projectStarted();
+    this.eventsService.projectStarted(this.getDirName(this.files[0].webkitRelativePath));
   }
 
   public loadFile(file: any) {
     if (file === this.currentFile) {
       return;
     }
-    console.log(file);
     const reader = new FileReader();
     reader.onload = (event: any) => {
       const img = new Image();
@@ -49,4 +48,20 @@ export class ImageSelectComponent implements OnInit {
     this.currentFile = file;
   }
 
+  private getDirName(filepath: string): string {
+    const firstSlash = this.getFirstPosition(filepath.indexOf('/'), filepath.indexOf('\\'));
+    return firstSlash > 0 ? filepath.substring(0, firstSlash) : filepath;
+  }
+
+
+  private getFirstPosition(firstSlash: number, firstBackslash: number): number {
+    if (firstSlash > 0 && firstBackslash > 0) {
+      return Math.min(firstSlash, firstBackslash);
+    } else if (firstSlash > 0) {
+      return firstSlash;
+    } else if (firstBackslash > 0) {
+      return firstBackslash;
+    }
+    return -1;
+  }
 }

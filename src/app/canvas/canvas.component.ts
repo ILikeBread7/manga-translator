@@ -93,10 +93,17 @@ export class CanvasComponent implements OnInit, OnDestroy {
         rect.removeFromCanvas();
       } else {
         this.bubblesService.addBubble(rect);
-        const onSelectedScaledOrMoved = () => this.selectBubble(rect);
-        rect.on('selected', onSelectedScaledOrMoved);
-        rect.on('scaled', onSelectedScaledOrMoved);
-        rect.on('moved', onSelectedScaledOrMoved);
+        const setBubbleActive = () => this.selectBubble(rect);
+        const saveBubbles = () => this.bubblesService.saveBubbles();
+        rect.on('selected', setBubbleActive);
+        rect.on('scaled', setBubbleActive);
+        rect.on('moved', setBubbleActive);
+        rect.on('rotated', setBubbleActive);
+        rect.on('scaled', saveBubbles);
+        rect.on('moved', saveBubbles);
+        rect.on('rotated', saveBubbles);
+        rect.textboxOn('changed', saveBubbles);
+
         rect.setCoords();
         rect.enterEditing();
         this.selectBubble(rect);
@@ -128,10 +135,10 @@ export class CanvasComponent implements OnInit, OnDestroy {
     );
 
     this.projectStartedSubscription = this.eventsService.projectStarted$.subscribe(
-      () => {
+      (projectName: string) => {
         this.canvas.clear();
         this.canvas.setBackgroundColor('#fff');
-        this.bubblesService.clearBubbles();
+        this.bubblesService.startNewProject(projectName);
         this.currentImage = undefined;
         this.selectBubble(undefined);
       }

@@ -89,6 +89,10 @@ export class TextRect {
     this.frontRect.on(event, handler);
   }
 
+  public textboxOn(event: string, handler: () => void) {
+    this.textbox.on(event, handler);
+  }
+
   public get(value: string) {
     return this.frontRect.get(value);
   }
