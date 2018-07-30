@@ -10,9 +10,11 @@ import { StorageService } from './storage.service';
 export class BubblesService {
 
   private projectName = '';
+  private currentImageName = '';
   private projectBubbles: ImageToBubblesMap = {};
   private textBubbles: TextRect[] = [];
   private deletedTextBubbles: TextRect[] = [];
+  private projectImages: File[];
 
   constructor(
     private storageService: StorageService
@@ -62,6 +64,14 @@ export class BubblesService {
     return this.existsAndNotEmpty(this.projectBubbles[name]);
   }
 
+  public setProjectImages(images: File[]) {
+    this.projectImages = images;
+  }
+
+  public getProjectImages(): File[] {
+    return this.projectImages;
+  }
+
   private loadBubblesFromStorage(projectName: string, canvas: any, addCallbacks: (bubble: TextRect) => void) {
     const savedBubbles = this.storageService.getObject(projectName);
     if (!savedBubbles) {
@@ -83,6 +93,7 @@ export class BubblesService {
     if (typeof this.textBubbles === 'undefined') {
       this.textBubbles = this.projectBubbles[name] = [];
     }
+    this.currentImageName = name;
     this.deletedTextBubbles = [];
   }
 
@@ -94,8 +105,16 @@ export class BubblesService {
     return this.mapToExportBubbles(this.textBubbles);
   }
 
+  public getExportBubblesForWholeProject(): { [name: string]: ExportTextRect[] } {
+    return this.getProjectExportBubbles();
+  }
+
   public saveBubbles() {
-    this.storageService.setObjectWithDelay(this.projectName, () => this.getProjectBubblesForSaving());
+    this.storageService.setObjectWithDelay(this.projectName, () => this.getProjectExportBubbles());
+  }
+
+  public getCurrentImageName() {
+    return this.currentImageName;
   }
 
   private mapToExportBubbles(bubbles: TextRect[]): ExportTextRect[] {
@@ -110,7 +129,7 @@ export class BubblesService {
     return _.filter(bubbles, (bubble) => !!bubble);
   }
 
-  private getProjectBubblesForSaving() {
+  private getProjectExportBubbles() {
     return _.pickBy(
             _.mapValues(this.projectBubbles
               , (bubbles: TextRect[]) =>

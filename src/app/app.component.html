@@ -6,9 +6,9 @@
 
 <div class="float-left">
   <div>
-    <button (click)="exportImage()">Export!</button>
+    <app-export [currentImage]="currentImage" [currentProjectName]="currentProjectName"></app-export>
   </div>
-  <div class="btn-group">
+  <div class="form-group btn-group">
     <button (click)="currentTab = 'CANVAS'" class="btn btn-secondary">Canvas</button>
     <button (click)="currentTab = 'PROJECTS'" class="btn btn-secondary">Projects</button>
   </div>
@@ -23,7 +23,7 @@
       Saving error!
     </span>
   </div>
-  <app-image-select [height]="MAX_HEIGHT - 100"></app-image-select>
+  <app-image-select [height]="MAX_HEIGHT - 240"></app-image-select>
 </div>
 <div [hidden]="currentTab != 'CANVAS'">
   <app-canvas [maxCanvasWidth]="MAX_WIDTH" [maxCanvasHeight]="MAX_HEIGHT"></app-canvas>

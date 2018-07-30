@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { EventsService } from '../events.service';
 import { BubblesService } from '../bubbles.service';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-image-select',
@@ -27,7 +28,8 @@ export class ImageSelectComponent implements OnInit {
     if ($event.target.files.length === 0) {
       return;
     }
-    this.files = $event.target.files;
+    this.files = _.filter($event.target.files, (f: File) => f.type.startsWith('image/'));
+    this.bubblesService.setProjectImages(this.files);
     this.eventsService.projectStarted(this.getDirName(this.files[0].webkitRelativePath));
   }
 

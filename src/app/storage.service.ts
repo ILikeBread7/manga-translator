@@ -19,7 +19,7 @@ export class StorageService {
       return;
     }
     this.debouncedSave.pipe(
-      debounceTime(2000),
+      debounceTime(1500),
       distinctUntilChanged()
     ).subscribe((data: KeyAndFunction) => this.setObject(data.key, data.getValue()));
   }

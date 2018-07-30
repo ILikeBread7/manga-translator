@@ -1,0 +1,18 @@
+<div class="form-group">
+  <button class="btn btn-primary" (click)="exportImage()" [disabled]="!currentImage">Export</button>
+  <label class="ml-2">Show in new tab:
+    <input type="checkbox"
+    [checked]="showInNewTab === true"
+    (change)="showInNewTab = $event.target.checked"/>
+  </label>
+</div>
+<div class="form-group">
+  <button class="btn btn-primary" (click)="exportAll()" [disabled]="!currentProjectName || exported.length < totalToExport">Export all</button>
+  <label class="ml-2">Omit untouched:
+    <input type="checkbox"
+    [disabled]="exported.length < totalToExport"
+    [checked]="omitUntouched === true"
+    (change)="omitUntouched = $event.target.checked"/>
+  </label>
+</div>
+<span *ngIf="totalToExport">Exported: {{ exported.length }} / {{ totalToExport }}</span>

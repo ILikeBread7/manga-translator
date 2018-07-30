@@ -11,7 +11,7 @@ export class ImageExportService {
 
   constructor() { }
 
-  public exportImage(img: HTMLImageElement, bubbles: ExportTextRect[]) {
+  public exportImage(img: HTMLImageElement, bubbles: ExportTextRect[], callback: (Blob) => void) {
     const canvasElement = document.createElement('canvas');
     const canvas = new fabric.StaticCanvas(canvasElement, {
       width: img.width,
@@ -56,8 +56,7 @@ export class ImageExportService {
     canvas.renderAll();
     canvasElement.toBlob((blob) => {
       const file = new Blob([blob], {type: 'image/png'});
-      const fileURL = URL.createObjectURL(file);
-      window.open(fileURL);
+      callback(file);
     });
   }
 

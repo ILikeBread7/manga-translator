@@ -19,7 +19,8 @@ export class AppComponent implements OnInit, OnDestroy {
   public showBubbleDetails = false;
   public currentTab = 'CANVAS';
 
-  private currentImage;
+  public currentImage;
+  public currentProjectName: string;
 
   private imageLoadedSubscription: Subscription;
   private projectStartedSubscription: Subscription;
@@ -27,7 +28,6 @@ export class AppComponent implements OnInit, OnDestroy {
 
   constructor(
     private eventsService: EventsService,
-    private imageExportService: ImageExportService,
     public bubblesService: BubblesService,
     public storageService: StorageService
   ) { }
@@ -40,9 +40,10 @@ export class AppComponent implements OnInit, OnDestroy {
       }
     );
     this.projectStartedSubscription = this.eventsService.projectStarted$.subscribe(
-      () => {
+      (name) => {
         this.showRightPanel = false;
         this.currentImage = undefined;
+        this.currentProjectName = name;
       }
     );
     this.bubbleSelectedSubscription = this.eventsService.bubbleSelected$.subscribe(
@@ -54,10 +55,6 @@ export class AppComponent implements OnInit, OnDestroy {
     this.imageLoadedSubscription.unsubscribe();
     this.projectStartedSubscription.unsubscribe();
     this.bubbleSelectedSubscription.unsubscribe();
-  }
-
-  public exportImage() {
-    this.imageExportService.exportImage(this.currentImage, this.bubblesService.getExportBubbles());
   }
 
 }
