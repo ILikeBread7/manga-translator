@@ -60,7 +60,7 @@ export class TextRect {
       this.setInvertedColors(options.invertedColors);
     }
     if (_.has(options, 'fontSize')) {
-      this.adjustFontSize(options.width);
+      this.adjustFontSize(options.width, options.height);
       if (this.textbox.get('fontSize') !== options.fontSize) {
         this.setFontSizeFrozen(true);
         this.textbox.set('fontSize', options.fontSize);
@@ -74,7 +74,7 @@ export class TextRect {
 
     this.frontRect.on('mousedblclick', () => this.enterEditing());
     this.textbox.on('editing:exited', () => this.canvas.setActiveObject(this.frontRect));
-    this.textbox.on('changed', () => this.adjustFontSize(this.textbox.get('width')));
+    this.textbox.on('changed', () => this.adjustFontSize(this.frontRect.get('width'), this.frontRect.get('height')));
   }
 
   public addToCanvas() {
@@ -89,8 +89,10 @@ export class TextRect {
     this.frontRect.set(options);
     this.bgRect.set(options);
     this.textbox.set(options);
-    if (_.has(options, 'width')) {
-      this.adjustFontSize(options.width);
+    const width = _.has(options, 'width') ? options.width : this.frontRect.get('width');
+    const height = _.has(options, 'height') ? options.height : this.frontRect.get('height');
+    if (_.has(options, 'width') || _.has(options, 'height')) {
+      this.adjustFontSize(width, height);
     }
     this.centerTextboxVetically();
   }
@@ -121,7 +123,7 @@ export class TextRect {
 
   public setToTextbox(key: string, value: any) {
     this.textbox.set(key, value);
-    this.adjustFontSize(this.frontRect.get('width'));
+    this.adjustFontSize(this.frontRect.get('width'), this.frontRect.get('height'));
     this.canvas.renderAll();
   }
 
@@ -154,7 +156,7 @@ export class TextRect {
   public setFontSizeFrozen(value: boolean) {
     this.fontSizeFrozen = value;
     if (value === false) {
-      this.adjustFontSize(this.frontRect.get('width'));
+      this.adjustFontSize(this.frontRect.get('width'), this.frontRect.get('height'));
       this.canvas.renderAll();
     }
   }
@@ -202,12 +204,13 @@ export class TextRect {
     this.textbox.set(newDims);
     newDims['height'] = this.frontRect.get('height');
     this.bgRect.set(newDims);
-    this.adjustFontSize(this.frontRect.get('width'));
+    this.adjustFontSize(this.frontRect.get('width'), this.frontRect.get('height'));
   }
 
-  private adjustFontSize(width: number) {
+  private adjustFontSize(width: number, height: number) {
     if (!this.fontSizeFrozen) {
-      this.textbox.set('fontSize', width / 4);
+      const maxVerticalSize = height / this.textbox.get('text').split('\n').length * 0.88;
+      this.textbox.set('fontSize', Math.min(width / 4, maxVerticalSize));
       const rectWidth = this.frontRect.get('width');
       const textboxWidth = this.textbox.get('width');
       if (textboxWidth > rectWidth) {
