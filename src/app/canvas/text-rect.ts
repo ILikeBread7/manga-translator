@@ -92,6 +92,7 @@ export class TextRect {
     if (_.has(options, 'width')) {
       this.adjustFontSize(options.width);
     }
+    this.centerTextboxVetically();
   }
 
   public setId(id: number) {
@@ -205,16 +206,26 @@ export class TextRect {
   }
 
   private adjustFontSize(width: number) {
-    if (this.fontSizeFrozen) {
-      return;
+    if (!this.fontSizeFrozen) {
+      this.textbox.set('fontSize', width / 4);
+      const rectWidth = this.frontRect.get('width');
+      const textboxWidth = this.textbox.get('width');
+      if (textboxWidth > rectWidth) {
+        this.textbox.set('fontSize', this.textbox.get('fontSize') * rectWidth / (textboxWidth + 1));
+        this.textbox.set('width', rectWidth);
+      }
     }
-    this.textbox.set('fontSize', width / 4);
-    const rectWidth = this.frontRect.get('width');
-    const textboxWidth = this.textbox.get('width');
-    if (textboxWidth > rectWidth) {
-      this.textbox.set('fontSize', this.textbox.get('fontSize') * rectWidth / (textboxWidth + 1));
-      this.textbox.set('width', rectWidth);
-    }
+    this.centerTextboxVetically();
+  }
+
+  private centerTextboxVetically() {
+    const angle = this.frontRect.get('angle');
+    this.frontRect.rotate(0);
+    this.textbox.rotate(0);
+    this.textbox.set('left', this.frontRect.get('left'));
+    this.textbox.set('top', this.frontRect.get('top') + Math.floor((this.frontRect.get('height') - this.textbox.get('height')) / 2));
+    this.textbox.rotate(angle);
+    this.frontRect.rotate(angle);
   }
 
 }
