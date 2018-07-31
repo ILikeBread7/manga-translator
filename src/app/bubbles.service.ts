@@ -159,7 +159,7 @@ export class BubblesService {
   }
 
   private existsAndNotEmpty(arr: any[]) {
-    return arr && arr.length > 0;
+    return arr && arr.length > 0 && _.find(arr, (bubble) => !!bubble);
   }
 
 }

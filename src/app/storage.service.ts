@@ -13,6 +13,8 @@ export class StorageService {
   private hasError = false;
   private debouncedSave = new Subject<KeyAndFunction>();
 
+  private PROPERTY_PREFIX = '_mt_property_';
+
   constructor() {
     if (!this.storage) {
       console.error('Local storage not supported!');
@@ -62,13 +64,31 @@ export class StorageService {
   }
 
   public deleteAll() {
-    this.storage.clear();
+    for (let i = 0; i < this.storage.length; i++) {
+      const name = this.storage.key(i);
+      if (name.startsWith(this.PROPERTY_PREFIX)) {
+        continue;
+      }
+      this.storage.removeItem(name);
+      i--;
+    }
+  }
+
+  public setProperty(key: string, value: string) {
+    this.storage.setItem(this.PROPERTY_PREFIX + key, value);
+  }
+
+  public getProperty(key: string) {
+    return this.storage.getItem(this.PROPERTY_PREFIX + key);
   }
 
   public listProjects(): ProjectData[] {
     const result = [];
     for (let i = 0; i < this.storage.length; i++) {
       const name = this.storage.key(i);
+      if (name.startsWith(this.PROPERTY_PREFIX)) {
+        continue;
+      }
       result.push({
         name: name,
         size: this.storage.getItem(name).length * 2
@@ -80,7 +100,11 @@ export class StorageService {
   public getTotalSize(): number {
     let totalChars = 0;
     for (let i = 0; i < this.storage.length; i++) {
-      totalChars += this.storage.getItem(this.storage.key(i)).length;
+      const name = this.storage.key(i);
+      if (name.startsWith(this.PROPERTY_PREFIX)) {
+        continue;
+      }
+      totalChars += this.storage.getItem(name).length;
     }
     return totalChars * 2;
   }
@@ -89,6 +113,9 @@ export class StorageService {
     const result = [];
     for (let i = 0; i < this.storage.length; i++) {
       const name = this.storage.key(i);
+      if (name.startsWith(this.PROPERTY_PREFIX)) {
+        continue;
+      }
       result.push({
         name: name,
         content: this.storage.getItem(name)

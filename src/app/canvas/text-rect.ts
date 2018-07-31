@@ -39,7 +39,7 @@ export class TextRect {
       width: options.width,
       lineHeight: 1,
       textAlign: 'center',
-      fontFamily: _.has(options, 'fontFamily') ? options.fontFamily : 'Wild Words',
+      fontFamily: options.fontFamily ? options.fontFamily : 'Wild Words',
       angle: _.has(options, 'angle') ? options.angle : 0
     };
     this.textbox = new fabric.Textbox(text, textboxOptions);

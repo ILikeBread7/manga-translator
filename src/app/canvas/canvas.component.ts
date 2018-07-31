@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs';
 import * as _ from 'lodash';
 import { TextRect } from './text-rect';
 import { BubblesService } from '../bubbles.service';
+import { FontService } from '../font.service';
 declare const fabric: any;
 
 @Component({
@@ -37,7 +38,8 @@ export class CanvasComponent implements OnInit, OnDestroy {
 
   constructor(
     private eventsService: EventsService,
-    private bubblesService: BubblesService
+    private bubblesService: BubblesService,
+    private fontService: FontService
   ) { }
 
   ngOnInit() {
@@ -61,7 +63,8 @@ export class CanvasComponent implements OnInit, OnDestroy {
           left: pointer.x,
           top: pointer.y,
           width: 0,
-          height: 0
+          height: 0,
+          fontFamily: this.fontService.getLastUsedFont()
         }
       );
       rect.addToCanvas();

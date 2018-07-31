@@ -37,9 +37,10 @@
     <div class="input-group">
       <input class="form-control"
         [value]="bubble.getFromTextbox('fontFamily')"
-        (input)="bubble.setToTextbox('fontFamily', $event.target.value); bubblesService.saveBubbles();"/>
+        (input)="setFontFamily($event.target.value)"/>
       <select class="form-control input-group-append"
-      (input)="bubble.setToTextbox('fontFamily', $event.target.value); bubblesService.saveBubbles();">
+      (input)="setFontFamily($event.target.value)">
+        <option value="Wild Words">Default</option>
         <option>Wild Words</option>
         <option>Manga Temple</option>
         <option>Felt</option>

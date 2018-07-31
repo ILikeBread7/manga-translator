@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs';
 import { TextRect } from '../canvas/text-rect';
 import { BubblesService } from '../bubbles.service';
 import 'fabric';
+import { FontService } from '../font.service';
 declare const fabric: any;
 
 @Component({
@@ -24,7 +25,8 @@ export class BubbleDetailsComponent implements OnInit, OnDestroy {
 
   constructor(
     private eventsService: EventsService,
-    public bubblesService: BubblesService
+    public bubblesService: BubblesService,
+    private fontService: FontService
   ) { }
 
   ngOnInit() {
@@ -49,6 +51,12 @@ export class BubbleDetailsComponent implements OnInit, OnDestroy {
 
     this.canvas = new fabric.StaticCanvas('selectionViewCanvas');
     this.resetCanvas();
+  }
+
+  public setFontFamily(fontFamily: string) {
+    this.bubble.setToTextbox('fontFamily', fontFamily);
+    this.bubblesService.saveBubbles();
+    this.fontService.setLastUsedFont(fontFamily);
   }
 
   private showViewOnCanvas(bubble: TextRect) {

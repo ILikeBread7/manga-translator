@@ -20,7 +20,7 @@ export class ExportComponent implements OnInit {
   public currentProjectName;
 
   public showInNewTab = true;
-  public omitUntouched = false;
+  public omitUntouched = true;
 
   public exported: NamedBlob[] = [];
   public totalToExport = 0;

@@ -1,20 +1,18 @@
-<div>
+<div class="form-group">
   Projects: (Total size: {{ formatSize(storageService.getTotalSize()) }})
   <div class="btn-group">
     <button class="btn btn-danger" (click)="deleteAll()">Delete all</button>
     <button class="btn btn-primary" (click)="downloadAll()">Donwload all</button>
   </div>
 </div>
-<div>
+<div class="form-group">
   Upload project:
   <input type="file" (change)="loadProject($event)"/>
 </div>
-<ul>
-  <li *ngFor="let p of storageService.listProjects()">
-    {{ p.name }} {{ formatSize(p.size) }}
-    <div class="btn-group">
-      <button class="btn btn-danger" (click)="deleteProject(p.name)">Delete</button>
-      <button class="btn btn-primary" (click)="downloadProject(p.name)">Download</button>
-    </div>
-  </li>
-</ul>
+<div class="form-group" *ngFor="let p of storageService.listProjects()">
+  {{ p.name }} {{ formatSize(p.size) }}
+  <div class="btn-group">
+    <button class="btn btn-danger" (click)="deleteProject(p.name)">Delete</button>
+    <button class="btn btn-primary" (click)="downloadProject(p.name)">Download</button>
+  </div>
+</div>
