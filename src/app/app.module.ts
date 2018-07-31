@@ -9,6 +9,9 @@ import { BubbleDetailsComponent } from './bubble-details/bubble-details.componen
 import { ProjectsComponent } from './projects/projects.component';
 import { ExportComponent } from './export/export.component';
 
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -20,7 +23,8 @@ import { ExportComponent } from './export/export.component';
     ExportComponent
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    environment.production ? ServiceWorkerModule.register('ngsw-worker.js') : []
   ],
   providers: [],
   bootstrap: [AppComponent]

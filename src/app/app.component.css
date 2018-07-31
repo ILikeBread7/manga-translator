@@ -5,20 +5,20 @@
 
 @font-face {
   font-family: "Wild Words";
-  src: url("../assets/fonts/wildwordsroman.ttf");
+  src: url("../fonts/wildwordsroman.ttf");
 }
 
 @font-face {
   font-family: "Manga Temple";
-  src: url("../assets/fonts/mangat.ttf");
+  src: url("../fonts/mangat.ttf");
 }
 
 @font-face {
   font-family: "Felt";
-  src: url("../assets/fonts/felt.ttf");
+  src: url("../fonts/felt.ttf");
 }
 
 @font-face {
   font-family: "Augie";
-  src: url("../assets/fonts/augie.ttf");
+  src: url("../fonts/augie.ttf");
 }

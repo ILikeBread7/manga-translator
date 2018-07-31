@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs';
 import { BubblesService } from './bubbles.service';
 import { ImageExportService } from './image-export.service';
 import { StorageService } from './storage.service';
+import { SwUpdate } from '@angular/service-worker';
 
 @Component({
   selector: 'app-root',

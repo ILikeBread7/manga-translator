@@ -36,7 +36,7 @@ export class ProjectsComponent implements OnInit {
     }
   }
 
-  public deleteAll(name: string) {
+  public deleteAll() {
     if (confirm('Are you sure you want to delete all projects?')) {
       this.storageService.deleteAll();
     }
