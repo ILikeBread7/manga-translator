@@ -37,19 +37,33 @@ export class ImageExportService {
 
     _.forEach(bubbles, (bubble) => {
       if (bubble.getText()) {
-        canvas.add(
-          new fabric.Textbox(bubble.getText(), {
-            left: bubble.getLeft(),
-            top: bubble.getTop(),
-            width: bubble.getWidth(),
-            fontSize: bubble.getFontSize(),
-            angle: bubble.getAngle(),
-            fill: bubble.isInvertedColors() ? '#fff' : '#000',
-            lineHeight: 1,
-            textAlign: 'center',
-            fontFamily: bubble.getFontFamily()
-          })
-        );
+        const rect = new fabric.Rect({
+          left: bubble.getLeft(),
+          top: bubble.getTop(),
+          width: bubble.getWidth(),
+          height: bubble.getHeight(),
+          angle: bubble.getAngle()
+        });
+        rect.rotate(0);
+
+        const textbox = new fabric.Textbox(bubble.getText(), {
+          left: bubble.getLeft(),
+          top: bubble.getTop(),
+          width: bubble.getWidth(),
+          fontSize: bubble.getFontSize(),
+          angle: bubble.getAngle(),
+          fill: bubble.isInvertedColors() ? '#fff' : '#000',
+          lineHeight: 1,
+          textAlign: 'center',
+          fontFamily: bubble.getFontFamily()
+        });
+        textbox.rotate(0);
+        textbox.set('left', rect.get('left'));
+        textbox.set('top', rect.get('top') + Math.floor((rect.get('height') - textbox.get('height')) / 2));
+        rect.rotate(bubble.getAngle());
+        textbox.rotate(bubble.getAngle());
+
+        canvas.add(textbox);
       }
     });
 

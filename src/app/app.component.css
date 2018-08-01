@@ -22,3 +22,13 @@
   font-family: "Augie";
   src: url("../fonts/augie.ttf");
 }
+
+@font-face {
+  font-family: "Mufferaw";
+  src: url("../fonts/mufferawrg.ttf");
+}
+
+@font-face {
+  font-family: "Janda Manatee";
+  src: url("../fonts/jandamanateesolid.ttf");
+}
