@@ -1,10 +1,5 @@
 <!-- for preloading fonts -->
-<span style="font-family: 'Wild Words'"></span>
-<span style="font-family: 'Manga Temple'"></span>
-<span style="font-family: 'Felt'"></span>
-<span style="font-family: 'Augie'"></span>
-<span style="font-family: 'Mufferaw'"></span>
-<span style="font-family: 'Janda Manatee'"></span>
+<span *ngFor="let f of fontService.getFontsList()" [style.font-family]="f"></span>
 
 <div class="float-left">
   <div>

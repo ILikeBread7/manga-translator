@@ -4,31 +4,26 @@
 }
 
 @font-face {
-  font-family: "Wild Words";
-  src: url("../fonts/wildwordsroman.ttf");
+  font-family: "Ranga";
+  src: url("../fonts/Ranga-Regular.ttf");
 }
 
 @font-face {
-  font-family: "Manga Temple";
-  src: url("../fonts/mangat.ttf");
+  font-family: "Ranga Bold";
+  src: url("../fonts/Ranga-Bold.ttf");
 }
 
 @font-face {
-  font-family: "Felt";
-  src: url("../fonts/felt.ttf");
+  font-family: "Bangers";
+  src: url("../fonts/Bangers-Regular.ttf");
 }
 
 @font-face {
-  font-family: "Augie";
-  src: url("../fonts/augie.ttf");
+  font-family: "Kalam";
+  src: url("../fonts/Kalam-Regular.ttf");
 }
 
 @font-face {
-  font-family: "Mufferaw";
-  src: url("../fonts/mufferawrg.ttf");
-}
-
-@font-face {
-  font-family: "Janda Manatee";
-  src: url("../fonts/jandamanateesolid.ttf");
+  font-family: "Architects Daughter";
+  src: url("../fonts/ArchitectsDaughter-Regular.ttf");
 }

@@ -12,6 +12,9 @@ export class FontService {
     private storageService: StorageService
   ) {
     this.lastUsedFont = storageService.getProperty('lastUsedFont');
+    if (!this.lastUsedFont) {
+      this.lastUsedFont = this.getDefaultFont();
+    }
   }
 
   public setLastUsedFont(font: string) {
@@ -21,6 +24,20 @@ export class FontService {
 
   public getLastUsedFont(): string {
     return this.lastUsedFont;
+  }
+
+  public getDefaultFont(): string {
+    return 'Ranga';
+  }
+
+  public getFontsList(): string[] {
+    return [
+      'Ranga',
+      'Ranga Bold',
+      'Bangers',
+      'Kalam',
+      'Architects Daughter'
+    ];
   }
 
 }

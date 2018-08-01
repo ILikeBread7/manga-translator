@@ -5,6 +5,7 @@ import { BubblesService } from './bubbles.service';
 import { ImageExportService } from './image-export.service';
 import { StorageService } from './storage.service';
 import { SwUpdate } from '@angular/service-worker';
+import { FontService } from './font.service';
 
 @Component({
   selector: 'app-root',
@@ -30,7 +31,8 @@ export class AppComponent implements OnInit, OnDestroy {
   constructor(
     private eventsService: EventsService,
     public bubblesService: BubblesService,
-    public storageService: StorageService
+    public storageService: StorageService,
+    public fontService: FontService
   ) { }
 
   ngOnInit(): void {

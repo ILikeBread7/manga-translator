@@ -26,7 +26,7 @@ export class BubbleDetailsComponent implements OnInit, OnDestroy {
   constructor(
     private eventsService: EventsService,
     public bubblesService: BubblesService,
-    private fontService: FontService
+    public fontService: FontService
   ) { }
 
   ngOnInit() {
