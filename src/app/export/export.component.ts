@@ -37,7 +37,10 @@ export class ExportComponent implements OnInit {
     const callback = this.showInNewTab
       ? (blob) => {
         const fileURL = URL.createObjectURL(blob);
-        window.open(fileURL);
+        const link = document.createElement('a');
+        link.target = '_blank';
+        link.href = fileURL;
+        link.click();
       }
       : (blob) => {
         saveAs(blob, this.extToPng(this.bubblesService.getCurrentImageName()));

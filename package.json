@@ -33,6 +33,7 @@
     "moment": "^2.22.2",
     "rxjs": "^6.0.0",
     "stream": "0.0.2",
+    "uglifyjs-webpack-plugin": "1.1.5",
     "zone.js": "^0.8.26"
   },
   "devDependencies": {
