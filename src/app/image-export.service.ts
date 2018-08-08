@@ -53,7 +53,7 @@ export class ImageExportService {
           fontSize: bubble.getFontSize(),
           angle: bubble.getAngle(),
           fill: bubble.isInvertedColors() ? '#fff' : '#000',
-          lineHeight: 1,
+          lineHeight: 0.75,
           textAlign: 'center',
           fontFamily: bubble.getFontFamily()
         });

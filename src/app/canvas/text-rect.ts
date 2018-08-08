@@ -37,7 +37,7 @@ export class TextRect {
       left: options.left,
       top: options.top,
       width: options.width,
-      lineHeight: 1,
+      lineHeight: 0.75,
       textAlign: 'center',
       fontFamily: options.fontFamily,
       angle: _.has(options, 'angle') ? options.angle : 0
