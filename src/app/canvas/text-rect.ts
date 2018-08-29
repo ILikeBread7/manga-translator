@@ -94,7 +94,7 @@ export class TextRect {
     if (_.has(options, 'width') || _.has(options, 'height')) {
       this.adjustFontSize(width, height);
     }
-    this.centerTextboxVetically();
+    this.centerTextboxVertically();
   }
 
   public setId(id: number) {
@@ -218,10 +218,10 @@ export class TextRect {
         this.textbox.set('width', rectWidth);
       }
     }
-    this.centerTextboxVetically();
+    this.centerTextboxVertically();
   }
 
-  private centerTextboxVetically() {
+  private centerTextboxVertically() {
     const angle = this.frontRect.get('angle');
     this.frontRect.rotate(0);
     this.textbox.rotate(0);
